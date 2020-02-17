@@ -2,11 +2,14 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.2.4.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'application'
+    id "com.github.johnrengelman.shadow" version "5.0.0"
 //    id "io.freefair.lombok" version "5.0.0-rc2"
 }
 
 group 'konst'
 version '1.0-SNAPSHOT'
+mainClassName = 'com.accenture.tgbots.sample.ExampleBot'
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
@@ -33,4 +36,10 @@ dependencies {
     runtimeOnly('com.h2database:h2')
 
     implementation 'org.apache.commons:commons-lang3:3.6'
+}
+
+shadowJar {
+    mergeServiceFiles()
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
 }
