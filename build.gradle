@@ -4,6 +4,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'application'
     id "com.github.johnrengelman.shadow" version "5.0.0"
+    id 'nu.studer.jooq' version '4.1'
 //    id "io.freefair.lombok" version "5.0.0-rc2"
 }
 
@@ -28,6 +29,9 @@ dependencies {
     compile 'com.annimon:tgbots-module:0.8'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    jooqRuntime 'org.jooq:jooq-meta-extensions'
+
     implementation 'org.springframework.boot:spring-boot-starter-jooq'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -42,4 +46,32 @@ shadowJar {
     mergeServiceFiles()
     exclude 'META-INF/*.DSA'
     exclude 'META-INF/*.RSA'
+}
+
+jooq {
+    sample(sourceSets.main) {
+        generator {
+            database {
+                name = 'org.jooq.meta.extensions.ddl.DDLDatabase'
+                properties {
+                    property {
+                        key = 'scripts'
+                        value = 'src/main/resources/*.sql'
+                    }
+                    property {
+                        key = 'sort'
+                        value = 'semantic'
+                    }
+                    property {
+                        key = 'unqualifiedSchema'
+                        value = 'none'
+                    }
+                    property {
+                        key = 'defaultNameCase'
+                        value = 'as_is'
+                    }
+                }
+            }
+        }
+    }
 }

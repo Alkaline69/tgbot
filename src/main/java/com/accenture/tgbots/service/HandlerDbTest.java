@@ -1,6 +1,9 @@
 package com.accenture.tgbots.service;
 
 import com.accenture.tgbots.model.ProcessingResult;
+import org.jooq.*;
+import org.jooq.conf.Settings;
+import org.jooq.impl.DSL;
 import org.springframework.stereotype.Component;
 
 import java.sql.DriverManager;
@@ -8,6 +11,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static org.jooq.generated.tables.Billionaires.BILLIONAIRES;
 
 @Component
 public class HandlerDbTest implements CommandHandler {
@@ -27,21 +32,18 @@ public class HandlerDbTest implements CommandHandler {
         var user = "sa";
         var passwd = "password";
 
-        var query = "SELECT * FROM billionaires WHERE career = ?";
-
         List<String> res = new ArrayList<>();
 
-        try {
-            var con = DriverManager.getConnection(url, user, passwd);
-            var st = con.prepareStatement(query);
-            st.setString(1, args.iterator().next());
-            var rs = st.executeQuery();
-
-            while (rs.next()) {
-                System.out.printf("%d %s", rs.getInt(1), rs.getString(2));
-                res.add(rs.getString(2) + " " + rs.getString(3));
+        try (var con = DriverManager.getConnection(url, user, passwd)) {
+            DSLContext dsl = DSL.using(con, SQLDialect.H2, new Settings().withRenderFormatted(true));
+            Result<Record2<String, String>> byCareer = dsl
+                    .select(BILLIONAIRES.FIRST_NAME, BILLIONAIRES.LAST_NAME)
+                    .from(BILLIONAIRES)
+                    .where(BILLIONAIRES.CAREER.eq(args.iterator().next()))
+                    .fetch();
+            for (Record row : byCareer) {
+                res.add(row.getValue(BILLIONAIRES.FIRST_NAME) + " " + row.getValue(BILLIONAIRES.LAST_NAME) );
             }
-            con.close();
         } catch (SQLException ex) {
             return new ProcessingResult(ex.getMessage());
         }
