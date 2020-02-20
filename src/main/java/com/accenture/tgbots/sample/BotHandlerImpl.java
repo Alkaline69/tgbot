@@ -9,6 +9,8 @@ import com.annimon.tgbotsmodule.BotHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -82,6 +84,7 @@ public class BotHandlerImpl extends BotHandler {
         List<CommandHandler> handlers = new ArrayList<>();
         handlers.add(new HandlerEcho());
         handlers.add(new HandlerDbTest());
+
         //todo: fill by Handler beans
 //        AnnotationConfigApplicationContext context =
 //                new AnnotationConfigApplicationContext();
