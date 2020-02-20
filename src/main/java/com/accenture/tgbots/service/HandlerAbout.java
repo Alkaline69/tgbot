@@ -3,28 +3,26 @@ package com.accenture.tgbots.service;
 import com.accenture.tgbots.model.ProcessingResult;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Component
 public class HandlerAbout implements CommandHandler {
 
-    private List<String> descriptions = new ArrayList<>();
-
-    public HandlerAbout() {
-        descriptions.add(getDescription());
-    }
+    private final String help;
 
     public HandlerAbout(List<CommandHandler> handlers) {
-        descriptions.add(getDescription());
-        for (CommandHandler nhd: handlers) {
-            descriptions.add(nhd.getDescription() + "\n");
-        }
+        help = getAbout(handlers);
+    }
+
+    @Override
+    public String getPrefix() {
+        return "/start";
     }
 
     @Override
     public boolean isSuitable(String text) {
-        return "/about".equals(text);
+        return getPrefix().equals(text);
     }
 
     @Override
@@ -34,6 +32,29 @@ public class HandlerAbout implements CommandHandler {
 
     @Override
     public ProcessingResult process(List<String> args) {
-        return new ProcessingResult(descriptions);
+        String result = (args.size() > 1)
+                ? help + getGreeting(args.iterator().next())
+                : help;
+
+        return new ProcessingResult(Collections.singletonList(result));
+    }
+
+    private String getAbout(List<CommandHandler> handlers) {
+        StringBuilder sb  = new StringBuilder();
+        sb.append("\nAromaBot поможет подобрать вам аромат по нотам, подобрать похожие ароматы при указании марки парфюма, отобразить парфюм со скидкой и многое другое!\n");
+
+        sb.append("\nПоддерживаемые ботом команды:");
+        sb.append("\n/about Вывод справки");
+        for (CommandHandler hnd : handlers) {
+            sb.append("\n").append(hnd.getDescription());
+        }
+
+        return sb.toString();
+    }
+
+    private String getGreeting(String name) {
+        return new StringBuilder("Приветствую, ").append(name).append("!")
+                .append(help)
+                .toString();
     }
 }

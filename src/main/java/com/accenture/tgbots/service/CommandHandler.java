@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface CommandHandler {
 
+    String getPrefix();
+
     boolean isSuitable(String text);
 
     String getDescription();

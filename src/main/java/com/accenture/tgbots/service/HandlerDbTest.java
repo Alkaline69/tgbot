@@ -17,8 +17,13 @@ public class HandlerDbTest implements CommandHandler {
     private HandlerDbDao handlerDbDao = new HandlerDbDao();
 
     @Override
+    public String getPrefix() {
+        return "/db";
+    }
+
+    @Override
     public boolean isSuitable(String text) {
-        return "/db".equals(text);
+        return getPrefix().equals(text);
     }
 
     @Override

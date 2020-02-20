@@ -17,17 +17,20 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class BotHandlerImpl extends BotHandler {
 
     private final BotConfig botConfig;
 
+    private List<CommandHandler> handlers;
+    private Map<String, CommandHandler> commandMap;
+
     public BotHandlerImpl(BotConfig botConfig) {
         this.botConfig = botConfig;
+
+        createHandlers();
+        fillCommandMap();
     }
 
     @Override
@@ -81,6 +84,15 @@ public class BotHandlerImpl extends BotHandler {
     }
 
     private CommandHandler getHandler(String cmd) {
+        CommandHandler hnd = commandMap.get(cmd);
+        return hnd != null ? hnd : commandMap.get("/help");
+    }
+
+    private void createHandlers() {
+        handlers = new ArrayList<>();
+        handlers.add(new HandlerEcho());
+        handlers.add(new HandlerDbTest());
+
         List<CommandHandler> handlers = new ArrayList<>();
         handlers.add(new HandlerEcho());
         handlers.add(new HandlerDbTest());
@@ -94,12 +106,27 @@ public class BotHandlerImpl extends BotHandler {
 //            System.out.println(key + " = " + beansList.get(key));
 //        }
 
+    }
+
+    private void fillCommandMap() {
+        commandMap = new HashMap<>();
         for (CommandHandler hnd : handlers) {
-            if (hnd.isSuitable(cmd)) {
-                return hnd;
-            }
+            commandMap.put(hnd.getPrefix(), hnd);
         }
 
-        return new HandlerAbout(handlers);
+        commandMap.put("/help", new HandlerAbout(handlers));
+    }
+
+    private String getAbout(String name) {
+        StringBuilder sb  = new StringBuilder("Приветствую, ").append(name).append("!");
+        sb.append("\nAromaBot поможет подобрать вам аромат по нотам, подобрать похожие ароматы при указании марки парфюма, отобразить парфюм со скидкой и многое другое!");
+
+        sb.append("\nПоддерживаемые ботом команды:");
+        sb.append("\n/about Вывод справки");
+        for (CommandHandler hnd : handlers) {
+            sb.append("\n").append(hnd.getDescription());
+        }
+
+        return sb.toString();
     }
 }

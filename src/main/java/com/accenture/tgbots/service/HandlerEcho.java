@@ -8,9 +8,15 @@ import java.util.List;
 
 @Component
 public class HandlerEcho implements CommandHandler {
+
+    @Override
+    public String getPrefix() {
+        return "/echo";
+    }
+
     @Override
     public boolean isSuitable(String text) {
-        return "/echo".equals(text);
+        return getPrefix().equals(text);
     }
 
     @Override
