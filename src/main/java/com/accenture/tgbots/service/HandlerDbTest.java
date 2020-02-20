@@ -3,10 +3,12 @@ package com.accenture.tgbots.service;
 import com.accenture.tgbots.dao.HandlerDbDao;
 import com.accenture.tgbots.model.Billionair;
 import com.accenture.tgbots.model.ProcessingResult;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
+import com.accenture.tgbots.model.input.HandlerInput;
+import com.accenture.tgbots.model.input.HandlerInputDbTest;
+import org.apache.commons.lang3.StringUtils;
+import org.telegram.telegrambots.meta.api.objects.Message;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,12 +30,14 @@ public class HandlerDbTest implements CommandHandler {
 
     @Override
     public String getDescription() {
-        return "/db [фильтр] Проверка взаимодействия с БД";
+        return "Проверка взаимодействия с БД";
     }
 
     @Override
-    public ProcessingResult process(List<String> args) {
-        List<Billionair> billionairsByCareer = handlerDbDao.findBillionairsByCareer(args.iterator().next());
+    public ProcessingResult process(HandlerInput args) {
+        HandlerInputDbTest input = (HandlerInputDbTest) args;
+
+        List<Billionair> billionairsByCareer = handlerDbDao.findBillionairsByCareer(input.getCareer());
 
         List<String> res = billionairsByCareer
                 .stream()
@@ -41,5 +45,19 @@ public class HandlerDbTest implements CommandHandler {
                 .collect(Collectors.toList());
 
         return new ProcessingResult(res.isEmpty() ? Collections.singletonList("Результатов не найдено") : res);
+    }
+
+    @Override
+    public HandlerInput parseInputMessage(Message message) {
+        HandlerInputDbTest model = new HandlerInputDbTest();
+        String[] input = StringUtils.split(message.getText(), " ");
+        if (input != null) {
+            List<String> args = Arrays.asList(input).subList(1, input.length);
+            if (args.size() >= 1) {
+                model.setCareer(args.iterator().next());
+            }
+        }
+
+        return model;
     }
 }

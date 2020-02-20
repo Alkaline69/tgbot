@@ -1,10 +1,15 @@
 package com.accenture.tgbots.sample;
 
 import com.accenture.tgbots.model.ProcessingResult;
+import com.accenture.tgbots.model.input.HandlerInput;
 import com.accenture.tgbots.service.CommandHandler;
 import com.accenture.tgbots.service.HandlerAbout;
 import com.accenture.tgbots.service.HandlerDbTest;
 import com.accenture.tgbots.service.HandlerEcho;
+import com.accenture.tgbots.service.perfume.FindByNoteHandler;
+import com.accenture.tgbots.service.perfume.GetNoviceHandler;
+import com.accenture.tgbots.service.perfume.GetRandomHandler;
+import com.accenture.tgbots.service.perfume.SplitToNoteHandler;
 import com.annimon.tgbotsmodule.BotHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +52,7 @@ public class BotHandlerImpl extends BotHandler {
         String text = message.getText();
         long chatId = message.getChatId();
 
-        SendMessage sm = new SendMessage(chatId, processInput(message.getText()));
+        SendMessage sm = new SendMessage(chatId, processInput(message));
         try {
             execute(sm);
         } catch (TelegramApiException e) {
@@ -66,13 +71,13 @@ public class BotHandlerImpl extends BotHandler {
         return botConfig.getToken();
     }
 
-    private String processInput(String text) {
-        String[] input = StringUtils.split(text, " ");
+    private String processInput(Message message) {
+        String[] input = StringUtils.split(message.getText(), " ");
         if (input != null) {
             CommandHandler handler = getHandler(input[0]);
 
-            List<String> args = Arrays.asList(input).subList(1, input.length);
-            ProcessingResult processingResult = handler.process(args);
+            HandlerInput handlerInput = handler.parseInputMessage(message);
+            ProcessingResult processingResult = handler.process(handlerInput);
             if (processingResult.isOk()) {
                 return StringUtils.join(processingResult.getResults(), "\n");
             } else {
@@ -89,13 +94,9 @@ public class BotHandlerImpl extends BotHandler {
     }
 
     private void createHandlers() {
-        handlers = new ArrayList<>();
-        handlers.add(new HandlerEcho());
-        handlers.add(new HandlerDbTest());
-
-        List<CommandHandler> handlers = new ArrayList<>();
-        handlers.add(new HandlerEcho());
-        handlers.add(new HandlerDbTest());
+        handlers = List.of(
+                new HandlerEcho(), new HandlerDbTest(),
+                new FindByNoteHandler(), new GetNoviceHandler(), new GetRandomHandler(), new SplitToNoteHandler());
 
         //todo: fill by Handler beans
 //        AnnotationConfigApplicationContext context =
@@ -117,16 +118,4 @@ public class BotHandlerImpl extends BotHandler {
         commandMap.put("/help", new HandlerAbout(handlers));
     }
 
-    private String getAbout(String name) {
-        StringBuilder sb  = new StringBuilder("Приветствую, ").append(name).append("!");
-        sb.append("\nAromaBot поможет подобрать вам аромат по нотам, подобрать похожие ароматы при указании марки парфюма, отобразить парфюм со скидкой и многое другое!");
-
-        sb.append("\nПоддерживаемые ботом команды:");
-        sb.append("\n/about Вывод справки");
-        for (CommandHandler hnd : handlers) {
-            sb.append("\n").append(hnd.getDescription());
-        }
-
-        return sb.toString();
-    }
 }

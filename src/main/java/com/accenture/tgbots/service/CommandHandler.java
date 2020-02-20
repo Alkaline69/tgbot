@@ -1,17 +1,23 @@
 package com.accenture.tgbots.service;
 
 import com.accenture.tgbots.model.ProcessingResult;
-
-import java.util.List;
+import com.accenture.tgbots.model.input.HandlerInput;
+import org.telegram.telegrambots.meta.api.objects.Message;
 
 public interface CommandHandler {
 
     String getPrefix();
 
-    boolean isSuitable(String text);
-
     String getDescription();
 
-    ProcessingResult process(List<String> args);
+    ProcessingResult process(HandlerInput args);
+
+    default boolean isSuitable(String text) {
+        return getPrefix().equals(text);
+    }
+
+    default HandlerInput parseInputMessage(Message message) {
+        return null;
+    }
 
 }

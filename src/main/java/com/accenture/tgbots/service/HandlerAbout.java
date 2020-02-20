@@ -1,7 +1,9 @@
 package com.accenture.tgbots.service;
 
 import com.accenture.tgbots.model.ProcessingResult;
+import com.accenture.tgbots.model.input.HandlerInput;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,16 +29,22 @@ public class HandlerAbout implements CommandHandler {
 
     @Override
     public String getDescription() {
-        return "Справка по поддерживаемым командам: \n/about \t\tПолучить справку";
+        return "/about \tПолучить справку";
     }
 
     @Override
-    public ProcessingResult process(List<String> args) {
-        String result = (args.size() > 1)
-                ? help + getGreeting(args.iterator().next())
-                : help;
+    public ProcessingResult process(HandlerInput args) {
+        String result = help;
 
         return new ProcessingResult(Collections.singletonList(result));
+    }
+
+    @Override
+    public HandlerInput parseInputMessage(Message message) {
+//        String result = (args.size() > 1)
+//                ? help + getGreeting(args.iterator().next())
+//                : help;
+        return null;
     }
 
     private String getAbout(List<CommandHandler> handlers) {
@@ -46,7 +54,7 @@ public class HandlerAbout implements CommandHandler {
         sb.append("\nПоддерживаемые ботом команды:");
         sb.append("\n/about Вывод справки");
         for (CommandHandler hnd : handlers) {
-            sb.append("\n").append(hnd.getDescription());
+            sb.append("\n").append(hnd.getPrefix()).append("\t").append(hnd.getDescription());
         }
 
         return sb.toString();
