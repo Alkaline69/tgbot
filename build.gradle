@@ -56,7 +56,7 @@ jooq {
                 properties {
                     property {
                         key = 'scripts'
-                        value = 'src/main/resources/*.sql'
+                        value = 'src/main/resources/schema.sql'
                     }
                     property {
                         key = 'sort'
