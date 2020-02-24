@@ -6,10 +6,7 @@ import com.accenture.tgbots.service.CommandHandler;
 import com.accenture.tgbots.service.HandlerAbout;
 import com.accenture.tgbots.service.HandlerDbTest;
 import com.accenture.tgbots.service.HandlerEcho;
-import com.accenture.tgbots.service.perfume.FindByNoteHandler;
-import com.accenture.tgbots.service.perfume.GetNoviceHandler;
-import com.accenture.tgbots.service.perfume.GetRandomHandler;
-import com.accenture.tgbots.service.perfume.SplitToNoteHandler;
+import com.accenture.tgbots.service.perfume.*;
 import com.annimon.tgbotsmodule.BotHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -96,7 +93,7 @@ public class BotHandlerImpl extends BotHandler {
     private void createHandlers() {
         handlers = List.of(
                 new HandlerEcho(), new HandlerDbTest(),
-                new FindByNoteHandler(), new GetNoviceHandler(), new GetRandomHandler(), new SplitToNoteHandler());
+                new FindByNoteHandler(), new GetNoviceHandler(), new GetRandomHandler(), new SplitToNoteHandler(), new GetProductHandler());
 
         //todo: fill by Handler beans
 //        AnnotationConfigApplicationContext context =
