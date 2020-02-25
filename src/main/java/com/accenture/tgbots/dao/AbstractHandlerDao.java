@@ -10,6 +10,8 @@ import java.sql.SQLException;
 
 public class AbstractHandlerDao {
 
+    protected final static int MAX_ROWS = 25;
+
     //todo: connection pool
     protected DSLContext dsl() throws SQLException {
         var url = "jdbc:h2:mem:testdb";
