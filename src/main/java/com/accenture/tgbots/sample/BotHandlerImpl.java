@@ -96,7 +96,8 @@ public class BotHandlerImpl extends BotHandler {
     private void createHandlers() {
         handlers = List.of(
                 new HandlerEcho(),
-                new FindByNoteHandler(), new GetNoviceHandler(), new GetRandomHandler(), new SplitToNoteHandler(), new GetProductHandler(), new ByFamilyHandler()
+                new FindByNoteHandler(), new GetNoviceHandler(), new GetRandomHandler(), new SplitToNoteHandler(), new GetProductHandler(), new ByFamilyHandler(),
+                new SplitToNoteHandler()
         );
 
         //todo: fill by Handler beans

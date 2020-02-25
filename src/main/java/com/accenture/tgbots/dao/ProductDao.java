@@ -14,8 +14,6 @@ import static org.jooq.generated.Tables.*;
 
 public class ProductDao extends AbstractHandlerDao {
 
-    private final static int MAX_ROWS = 20;
-
     private final static RecordMapper<Record, Product> MAPPER = record -> {
         Product p = new Product();
         p.setProductID(record.get(TPRODUCT.PRODUCTID));
