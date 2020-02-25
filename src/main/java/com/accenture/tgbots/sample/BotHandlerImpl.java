@@ -4,15 +4,11 @@ import com.accenture.tgbots.model.ProcessingResult;
 import com.accenture.tgbots.model.input.HandlerInput;
 import com.accenture.tgbots.service.CommandHandler;
 import com.accenture.tgbots.service.HandlerAbout;
-import com.accenture.tgbots.service.HandlerDbTest;
 import com.accenture.tgbots.service.HandlerEcho;
 import com.accenture.tgbots.service.perfume.*;
 import com.annimon.tgbotsmodule.BotHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -73,12 +69,19 @@ public class BotHandlerImpl extends BotHandler {
         if (input != null) {
             CommandHandler handler = getHandler(input[0]);
 
-            HandlerInput handlerInput = handler.parseInputMessage(message);
-            ProcessingResult processingResult = handler.process(handlerInput);
+            ProcessingResult processingResult;
+            try {
+                HandlerInput handlerInput = handler.parseInputMessage(message);
+                processingResult = handler.process(handlerInput);
+            } catch (RuntimeException e) {
+                processingResult = new ProcessingResult();
+                processingResult.setStatus(ProcessingResult.Status.INTERNAL_ERROR);
+                processingResult.setResults(Collections.singletonList(e.getLocalizedMessage()));
+            }
             if (processingResult.isOk()) {
                 return StringUtils.join(processingResult.getResults(), "\n");
             } else {
-                return "Ошибка обработки: " + processingResult.getError();
+                return "Ошибка обработки: " + processingResult.getResults();
             }
         }
 
@@ -92,8 +95,9 @@ public class BotHandlerImpl extends BotHandler {
 
     private void createHandlers() {
         handlers = List.of(
-                new HandlerEcho(), new HandlerDbTest(),
-                new FindByNoteHandler(), new GetNoviceHandler(), new GetRandomHandler(), new SplitToNoteHandler(), new GetProductHandler());
+                new HandlerEcho(),
+                new FindByNoteHandler(), new GetNoviceHandler(), new GetRandomHandler(), new SplitToNoteHandler(), new GetProductHandler(), new ByFamilyHandler()
+        );
 
         //todo: fill by Handler beans
 //        AnnotationConfigApplicationContext context =
