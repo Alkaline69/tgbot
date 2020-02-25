@@ -27,12 +27,10 @@ public class ExampleBot implements BotModule {
     @Autowired
     private DbProperties dbProperties;
 
-    private String justTest;
-
     @Override
     public @NotNull BotHandler botHandler(@NotNull Config config) {
         final var configLoader = new YamlConfigLoaderService<BotConfig>();
-        final var configFile = configLoader.configFile("testbot", config.getProfile());
+        final var configFile = configLoader.configFile("botconfig", config.getProfile());
         final var botConfig = configLoader.load(configFile, BotConfig.class);
 
 
