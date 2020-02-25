@@ -1,6 +1,6 @@
 package com.accenture.tgbots.service.perfume;
 
-import com.accenture.tgbots.dao.HandlerProductDao;
+import com.accenture.tgbots.dao.ProductDao;
 import com.accenture.tgbots.model.ProcessingResult;
 import com.accenture.tgbots.model.Product;
 import com.accenture.tgbots.model.input.HandlerInput;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  */
 public class GetProductHandler implements CommandHandler {
 
-    private final HandlerProductDao productDao = new HandlerProductDao();
+    private final ProductDao productDao = new ProductDao();
 
     @Override
     public String getPrefix() {

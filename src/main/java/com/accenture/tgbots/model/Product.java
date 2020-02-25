@@ -31,12 +31,12 @@ public class Product {
     @Override
     public String toString() {
         return new StringBuilder()
-                .append(brand).append(",")
-                .append(name).append(",")
-//                .append(vol).append(",")
-                .append(type).append(",")
-                .append(realizeDate).append(",")
-                .append(cost).append(",")
+                .append(brand).append(", ")
+                .append(name).append(", ")
+//                .append(vol).append(", ")
+                .append(type).append(", ")
+                .append(realizeDate).append(", ")
+                .append(cost)
 //                .append(family).append(",")
 //                .append(country).append(",")
 //                .append(sex)
