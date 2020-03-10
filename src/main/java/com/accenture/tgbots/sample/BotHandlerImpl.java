@@ -15,7 +15,10 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class BotHandlerImpl extends BotHandler {
 
@@ -67,7 +70,7 @@ public class BotHandlerImpl extends BotHandler {
     private String processInput(Message message) {
         String[] input = StringUtils.split(message.getText(), " ");
         if (input != null) {
-            CommandHandler handler = getHandler(input[0]);
+            var handler = getHandler(input[0]);
 
             ProcessingResult processingResult;
             try {

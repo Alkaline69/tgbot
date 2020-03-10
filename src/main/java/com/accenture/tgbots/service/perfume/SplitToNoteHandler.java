@@ -1,10 +1,10 @@
 package com.accenture.tgbots.service.perfume;
 
 import com.accenture.tgbots.dao.NoteDao;
+import com.accenture.tgbots.dao.ProductDao;
 import com.accenture.tgbots.model.Note;
 import com.accenture.tgbots.model.ProcessingResult;
-import com.accenture.tgbots.model.input.HandlerInput;
-import com.accenture.tgbots.model.input.perfume.ByFamilyInput;
+import com.accenture.tgbots.model.Product;
 import com.accenture.tgbots.model.input.perfume.GetNotesInput;
 import com.accenture.tgbots.service.CommandHandler;
 import org.apache.commons.lang3.BooleanUtils;
@@ -15,9 +15,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SplitToNoteHandler implements CommandHandler {
+public class SplitToNoteHandler implements CommandHandler<GetNotesInput> {
 
     private final NoteDao noteDao = new NoteDao();
+    private final ProductDao productDao = new ProductDao();
 
     @Override
     public String getPrefix() {
@@ -30,14 +31,19 @@ public class SplitToNoteHandler implements CommandHandler {
     }
 
     @Override
-    public ProcessingResult process(HandlerInput args) {
-        GetNotesInput input = (GetNotesInput) args;
-
-        if (BooleanUtils.isTrue(input.getAllNotes())) {
+    public ProcessingResult process(GetNotesInput args) {
+        if (BooleanUtils.isTrue(args.getAllNotes())) {
             return new ProcessingResult(
                     noteDao.list().stream().map(Note::toString).collect(Collectors.toList())
             );
         } else {
+
+            Product product = productDao.getByNameAndBrand(args.getProduct(), args.getBrand());
+            if (product != null) {
+                return new ProcessingResult(
+                        noteDao.listByProduct(product.getProductID()).stream().map(Note::toString).collect(Collectors.toList()));
+            }
+
             //todo
         }
 
@@ -46,16 +52,19 @@ public class SplitToNoteHandler implements CommandHandler {
     }
 
     @Override
-    public HandlerInput parseInputMessage(Message message) {
+    public GetNotesInput parseInputMessage(Message message) {
         GetNotesInput model = new GetNotesInput();
-        String[] input = StringUtils.split(message.getText(), " ");
+
+        String inputText = message.getText().replaceFirst(getPrefix(), "");
+
+        String[] input = StringUtils.split(inputText, ",");
         if (input != null) {
-            List<String> args = Arrays.asList(input).subList(1, input.length);
+            List<String> args = Arrays.asList(input);
             if (args.size() == 0) {
                 model.setAllNotes(true);
             } else if (args.size() == 2) {
-                model.setBrand(args.iterator().next());
-                model.setProduct(args.iterator().next());
+                model.setProduct(args.get(0).trim());
+                model.setBrand(args.get(1).trim());
             } else {
                 throw new RuntimeException("Повторите команду с уточнением запроса");
             }

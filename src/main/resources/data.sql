@@ -856,3 +856,11 @@ VALUES
 (3, 16, 50),
 (4, 2, 12),
 (5, 6, 28);
+
+
+------TABLE PRODUCT_NOTES
+INSERT INTO tProductNotes
+VALUES
+(17, 1),
+(17, 3),
+(17, 5);

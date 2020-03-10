@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ByFamilyHandler implements CommandHandler {
+public class ByFamilyHandler implements CommandHandler<ByFamilyInput> {
 
     private final ProductDao productDao = new ProductDao();
 
@@ -29,9 +29,7 @@ public class ByFamilyHandler implements CommandHandler {
     }
 
     @Override
-    public ProcessingResult process(HandlerInput args) {
-        ByFamilyInput input = (ByFamilyInput) args;
-
+    public ProcessingResult process(ByFamilyInput input) {
         List<String> res = productDao.getByFamily(input.getFamily())
                 .stream()
                 .map(Product::toString)
@@ -41,7 +39,7 @@ public class ByFamilyHandler implements CommandHandler {
     }
 
     @Override
-    public HandlerInput parseInputMessage(Message message) {
+    public ByFamilyInput parseInputMessage(Message message) {
         ByFamilyInput model = new ByFamilyInput();
         String[] input = StringUtils.split(message.getText(), " ");
         if (input != null) {

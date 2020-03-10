@@ -83,4 +83,30 @@ public class ProductDao extends AbstractHandlerDao {
             return null;
         }
     }
+
+    public Product getByNameAndBrand(String name, String brand) {
+        try {
+            Product product = dsl()
+                    .select()
+                    .from(TPRODUCT)
+                    .join(TBRAND).on(TBRAND.BRANDID.eq(TPRODUCT.BRANDID))
+                    .join(TTYPE).on(TTYPE.TYPEID.eq(TPRODUCT.TYPEID))
+                    .join(TFAMILY).on(TFAMILY.FAMILYID.eq(TPRODUCT.FAMILYID))
+                    .join(TCOUNTRY).on(TCOUNTRY.COUNTRYID.eq(TPRODUCT.COUNTRYID))
+                    .join(TSEX).on(TSEX.SEXID.eq(TPRODUCT.SEXID))
+                    .where(
+                            TPRODUCT.NAME.likeIgnoreCase(name)
+                            .and(TBRAND.NAME.equalIgnoreCase(brand)))
+                    .limit(MAX_ROWS)
+                    .fetchOne(MAPPER);
+
+            if (product == null) {
+                throw new RuntimeException("Товара с таким названием и брендом не найдено");
+            }
+
+            return product;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
 }

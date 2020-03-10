@@ -32,4 +32,20 @@ public class NoteDao extends AbstractHandlerDao {
         }
     }
 
+    public List<Note> listByProduct(Integer productId) {
+        try {
+            List<Note> products = dsl()
+                    .select()
+                    .from(TNOTE)
+                    .join(TPRODUCT).on(TPRODUCT.PRODUCTID.eq(TPRODUCTNOTES.PRODUCT_ID))
+                    .join(TPRODUCTNOTES).on(TPRODUCTNOTES.NOTE_ID.eq(TNOTE.NOTEID))
+                    .where(TPRODUCT.PRODUCTID.eq(productId))
+                    .limit(MAX_ROWS)
+                    .fetch(MAPPER);
+            return products;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
 }

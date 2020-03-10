@@ -28,6 +28,7 @@ public class ExampleBot implements BotModule {
     private DbProperties dbProperties;
 
     @Override
+//    @Bean
     public @NotNull BotHandler botHandler(@NotNull Config config) {
         final var configLoader = new YamlConfigLoaderService<BotConfig>();
         final var configFile = configLoader.configFile("botconfig", config.getProfile());

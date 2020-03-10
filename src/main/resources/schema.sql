@@ -35,3 +35,12 @@ CREATE TABLE tProduct ( ProductID INTEGER  PRIMARY KEY
 					   ,BrandID INTEGER
 					   ,FamilyID INTEGER
 					   ,NoteID INTEGER);
+
+CREATE TABLE tProductNotes (
+     product_id  INTEGER NOT NULL
+	,note_id     INTEGER NOT NULL
+
+	,constraint pk_tProductNotes             primary key (product_id, note_id)
+    ,constraint FK_tProductNotes_PRODUCT_ID  foreign key (product_id)    references tProduct (ProductID)
+    ,constraint FK_tProductNotes_NOTE_ID     foreign key (note_id)       references tNote (NoteID)
+);
