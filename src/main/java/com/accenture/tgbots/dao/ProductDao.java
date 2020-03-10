@@ -86,7 +86,7 @@ public class ProductDao extends AbstractHandlerDao {
 
     public Product getByNameAndBrand(String name, String brand) {
         try {
-            Product product = dsl()
+            return dsl()
                     .select()
                     .from(TPRODUCT)
                     .join(TBRAND).on(TBRAND.BRANDID.eq(TPRODUCT.BRANDID))
@@ -99,12 +99,6 @@ public class ProductDao extends AbstractHandlerDao {
                             .and(TBRAND.NAME.equalIgnoreCase(brand)))
                     .limit(MAX_ROWS)
                     .fetchOne(MAPPER);
-
-            if (product == null) {
-                throw new RuntimeException("Товара с таким названием и брендом не найдено");
-            }
-
-            return product;
         } catch (SQLException e) {
             return null;
         }

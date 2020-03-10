@@ -37,37 +37,35 @@ public class SplitToNoteHandler implements CommandHandler<GetNotesInput> {
                     noteDao.list().stream().map(Note::toString).collect(Collectors.toList())
             );
         } else {
-
             Product product = productDao.getByNameAndBrand(args.getProduct(), args.getBrand());
+            if (product == null) {
+                product = productDao.getByNameAndBrand(args.getBrand(), args.getProduct());
+            }
+
             if (product != null) {
                 return new ProcessingResult(
                         noteDao.listByProduct(product.getProductID()).stream().map(Note::toString).collect(Collectors.toList()));
+            } else {
+                throw new RuntimeException("Повторите команду с уточнением запроса");
             }
-
-            //todo
         }
-
-
-        return null;
     }
 
     @Override
     public GetNotesInput parseInputMessage(Message message) {
+        String inputText = StringUtils.remove(message.getText(), getPrefix());
+        List<String> args = Arrays.stream(StringUtils.split(inputText,","))
+                .map(String::trim)
+                .collect(Collectors.toList());
+
         GetNotesInput model = new GetNotesInput();
-
-        String inputText = message.getText().replaceFirst(getPrefix(), "");
-
-        String[] input = StringUtils.split(inputText, ",");
-        if (input != null) {
-            List<String> args = Arrays.asList(input);
-            if (args.size() == 0) {
-                model.setAllNotes(true);
-            } else if (args.size() == 2) {
-                model.setProduct(args.get(0).trim());
-                model.setBrand(args.get(1).trim());
-            } else {
-                throw new RuntimeException("Повторите команду с уточнением запроса");
-            }
+        if (args.size() == 0) {
+            model.setAllNotes(true);
+        } else if (args.size() == 2) {
+            model.setProduct(args.get(0));
+            model.setBrand(args.get(1));
+        } else {
+            throw new RuntimeException("Повторите команду с уточнением запроса");
         }
 
         return model;
