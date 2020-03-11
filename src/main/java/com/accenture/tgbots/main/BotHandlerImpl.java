@@ -1,10 +1,9 @@
-package com.accenture.tgbots.sample;
+package com.accenture.tgbots.main;
 
-import com.accenture.tgbots.model.ProcessingResult;
+import com.accenture.tgbots.model.output.ProcessingResult;
 import com.accenture.tgbots.model.input.HandlerInput;
 import com.accenture.tgbots.service.CommandHandler;
 import com.accenture.tgbots.service.HandlerAbout;
-import com.accenture.tgbots.service.HandlerEcho;
 import com.accenture.tgbots.service.perfume.*;
 import com.accenture.tgbots.service.perfume.dict.BrandHandler;
 import com.accenture.tgbots.service.perfume.dict.FamilyHandler;
@@ -28,6 +27,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Реализация бота для парфюмерного магазина
+ */
 public class BotHandlerImpl extends BotHandler {
 
     private final BotConfig botConfig;
@@ -42,20 +44,22 @@ public class BotHandlerImpl extends BotHandler {
         fillCommandMap();
     }
 
+    /**
+     * Обработчик входящих сообщений боту
+     * @param update входные данные
+     * @return
+     */
     @Override
     protected BotApiMethod onUpdate(@NotNull Update update) {
         if (!update.hasMessage()) {
             return null;
         }
-
         Message message = update.getMessage();
         if (!message.hasText()) {
             return null;
         }
 
-        String text = message.getText();
         long chatId = message.getChatId();
-
         SendMessage sm = new SendMessage(chatId, processInput(message));
         try {
             execute(sm);
@@ -75,6 +79,25 @@ public class BotHandlerImpl extends BotHandler {
         return botConfig.getToken();
     }
 
+    /**
+     * Создание отдельных обработчиков-команд бота
+     */
+    private void createHandlers() {
+        handlers = List.of(
+                new NoteHandler(), new BrandHandler(), new TitleHandler(), new FamilyHandler(),
+                new FindByNoteHandler(), new GetNoviceHandler(), new GetRandomHandler(), new SplitToNoteHandler(), new GetProductHandler(), new ByFamilyHandler(),
+                new ByDiscountHandler(),
+                new ByMonthNoveltyHandlerImpl(), new BySeasonNoveltyHandlerImpl(), new ByHalfYearNoveltyHandlerImpl(), new ByLastYearNoveltyHandlerImpl(),
+                new SplitToNoteHandler()
+        );
+    }
+
+    /**
+     * Метод обаботки входящего сообщения
+     * Парсит входящую текстовую строку, отделяя команду и находя отдельный обработчик для нее
+     * @param message входящее сообщение
+     * @return результат обработки сообщения
+     */
     private String processInput(Message message) {
         String[] input = StringUtils.split(message.getText(), " ");
         if (input != null) {
@@ -89,6 +112,7 @@ public class BotHandlerImpl extends BotHandler {
                 processingResult.setStatus(ProcessingResult.Status.INTERNAL_ERROR);
                 processingResult.setResults(Collections.singletonList(e.getLocalizedMessage()));
             }
+
             if (processingResult.isOk()) {
                 return StringUtils.join(processingResult.getResults(), "\n");
             } else {
@@ -99,32 +123,19 @@ public class BotHandlerImpl extends BotHandler {
         return "Неверный формат запроса";
     }
 
+    /**
+     * Получить обработчик команды по префиксу
+     * @param cmd префикс
+     * @return экземпляр обработчика
+     */
     private CommandHandler getHandler(String cmd) {
         CommandHandler hnd = commandMap.get(cmd);
         return hnd != null ? hnd : commandMap.get("/help");
     }
 
-    private void createHandlers() {
-        handlers = List.of(
-                new HandlerEcho(),
-                new NoteHandler(), new BrandHandler(), new TitleHandler(), new FamilyHandler(),
-                new FindByNoteHandler(), new GetNoviceHandler(), new GetRandomHandler(), new SplitToNoteHandler(), new GetProductHandler(), new ByFamilyHandler(),
-                new ByDiscountHandler(),
-                new ByMonthNoveltyHandlerImpl(), new BySeasonNoveltyHandlerImpl(), new ByHalfYearNoveltyHandlerImpl(), new ByLastYearNoveltyHandlerImpl(),
-                new SplitToNoteHandler()
-        );
-
-        //todo: fill by Handler beans
-//        AnnotationConfigApplicationContext context =
-//                new AnnotationConfigApplicationContext();
-//        Map<String, CommandHandler> beansList = context.getBeansOfType(CommandHandler.class);
-//
-//        for (String key : beansList.keySet()) {
-//            System.out.println(key + " = " + beansList.get(key));
-//        }
-
-    }
-
+    /**
+     * Заполнение набора команд бота для справки
+     */
     private void fillCommandMap() {
         commandMap = new HashMap<>();
         for (CommandHandler hnd : handlers) {

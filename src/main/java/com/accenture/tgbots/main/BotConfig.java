@@ -1,9 +1,12 @@
-package com.accenture.tgbots.sample;
+package com.accenture.tgbots.main;
 
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotBlank;
 
+/**
+ * Конфигурация бота
+ */
 @Data
 public class BotConfig {
 

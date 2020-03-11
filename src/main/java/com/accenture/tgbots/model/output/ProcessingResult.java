@@ -1,16 +1,26 @@
-package com.accenture.tgbots.model;
+package com.accenture.tgbots.model.output;
 
 import lombok.Data;
 
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Результат оюработки ботом команды
+ */
 @Data
 public class ProcessingResult {
 
     public enum Status {OK, BAD_ARGUMENT, INTERNAL_ERROR}
 
+    /**
+     * Статус результата
+     */
     private Status status;
+
+    /**
+     * Список строк, отдаваемых в результате работы команды
+     */
     private List<String> results;
 
     public ProcessingResult() {

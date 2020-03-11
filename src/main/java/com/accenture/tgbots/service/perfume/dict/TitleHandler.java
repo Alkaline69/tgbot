@@ -1,7 +1,7 @@
 package com.accenture.tgbots.service.perfume.dict;
 
 import com.accenture.tgbots.dao.TitleDao;
-import com.accenture.tgbots.model.ProcessingResult;
+import com.accenture.tgbots.model.output.ProcessingResult;
 import com.accenture.tgbots.model.Title;
 import com.accenture.tgbots.model.input.NoArgsHandlerInput;
 import com.accenture.tgbots.service.CommandHandler;

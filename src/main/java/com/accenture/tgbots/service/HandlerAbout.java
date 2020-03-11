@@ -1,15 +1,16 @@
 package com.accenture.tgbots.service;
 
-import com.accenture.tgbots.model.ProcessingResult;
-import com.accenture.tgbots.model.input.HandlerInput;
-import org.springframework.stereotype.Component;
+import com.accenture.tgbots.model.output.ProcessingResult;
+import com.accenture.tgbots.model.input.NoArgsHandlerInput;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.util.Collections;
 import java.util.List;
 
-@Component
-public class HandlerAbout implements CommandHandler {
+/**
+ * Обработчик получения справки по командам бота
+ */
+public class HandlerAbout implements CommandHandler<NoArgsHandlerInput> {
 
     private final String help;
 
@@ -23,24 +24,19 @@ public class HandlerAbout implements CommandHandler {
     }
 
     @Override
-    public boolean isSuitable(String text) {
-        return getPrefix().equals(text);
-    }
-
-    @Override
     public String getDescription() {
         return "/about \tПолучить справку";
     }
 
     @Override
-    public ProcessingResult process(HandlerInput args) {
+    public ProcessingResult process(NoArgsHandlerInput args) {
         String result = help;
 
         return new ProcessingResult(Collections.singletonList(result));
     }
 
     @Override
-    public HandlerInput parseInputMessage(Message message) {
+    public NoArgsHandlerInput parseInputMessage(Message message) {
 //        String result = (args.size() > 1)
 //                ? help + getGreeting(args.iterator().next())
 //                : help;
