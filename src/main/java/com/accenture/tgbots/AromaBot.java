@@ -1,4 +1,4 @@
-package com.accenture.tgbots.main;
+package com.accenture.tgbots;
 
 import com.annimon.tgbotsmodule.BotHandler;
 import com.annimon.tgbotsmodule.BotModule;

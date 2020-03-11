@@ -1,4 +1,4 @@
-package com.accenture.tgbots.main;
+package com.accenture.tgbots;
 
 import com.accenture.tgbots.model.output.ProcessingResult;
 import com.accenture.tgbots.model.input.HandlerInput;
