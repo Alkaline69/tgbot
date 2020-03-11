@@ -1,6 +1,6 @@
 package com.accenture.tgbots.dao;
 
-import com.accenture.tgbots.model.Brand;
+import com.accenture.tgbots.model.dto.dict.Brand;
 import org.jooq.Record;
 import org.jooq.RecordMapper;
 

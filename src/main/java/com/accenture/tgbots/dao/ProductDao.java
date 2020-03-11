@@ -1,15 +1,13 @@
 package com.accenture.tgbots.dao;
 
-import com.accenture.tgbots.model.Product;
+import com.accenture.tgbots.model.dto.product.Product;
 import com.accenture.tgbots.model.input.perfume.NoviceInput;
 import org.jooq.Record;
 import org.jooq.RecordMapper;
 import org.springframework.util.CollectionUtils;
 
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import static org.jooq.generated.Tables.*;
 
@@ -30,6 +28,10 @@ public class ProductDao extends AbstractHandlerDao {
         return p;
     };
 
+    /**
+     * Отдать список парфюмерных товаров
+     * @return
+     */
     public List<Product> getAllProducts() {
         try {
             List<Product> products = dsl()
@@ -48,10 +50,15 @@ public class ProductDao extends AbstractHandlerDao {
         }
     }
 
+    /**
+     * Отдать случайный товар
+     * @return
+     */
     public Product getRandomProduct() {
         try {
             int count = dsl().selectCount().from(TPRODUCT).fetchOne(0, int.class);
             int randomIndex = (int) (Math.random() * count);
+
             Product product = dsl()
                     .select()
                     .from(TPRODUCT)

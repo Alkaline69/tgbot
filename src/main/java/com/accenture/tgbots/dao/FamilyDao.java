@@ -1,6 +1,6 @@
 package com.accenture.tgbots.dao;
 
-import com.accenture.tgbots.model.Family;
+import com.accenture.tgbots.model.dto.dict.Family;
 import org.jooq.Record;
 import org.jooq.RecordMapper;
 

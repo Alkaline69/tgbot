@@ -2,9 +2,9 @@ package com.accenture.tgbots.service.perfume;
 
 import com.accenture.tgbots.dao.NoteDao;
 import com.accenture.tgbots.dao.ProductDao;
-import com.accenture.tgbots.model.Note;
+import com.accenture.tgbots.model.dto.dict.Note;
 import com.accenture.tgbots.model.output.ProcessingResult;
-import com.accenture.tgbots.model.Product;
+import com.accenture.tgbots.model.dto.product.Product;
 import com.accenture.tgbots.model.input.perfume.GetNotesInput;
 import com.accenture.tgbots.service.CommandHandler;
 import org.apache.commons.lang3.BooleanUtils;

@@ -1,5 +1,6 @@
-package com.accenture.tgbots.model.input;
+package com.accenture.tgbots.model.input.about;
 
+import com.accenture.tgbots.model.input.HandlerInput;
 import lombok.Data;
 
 @Data

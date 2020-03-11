@@ -2,7 +2,7 @@ package com.accenture.tgbots.service.perfume.novelty;
 
 import com.accenture.tgbots.dao.ProductDao;
 import com.accenture.tgbots.model.output.ProcessingResult;
-import com.accenture.tgbots.model.Product;
+import com.accenture.tgbots.model.dto.product.Product;
 import com.accenture.tgbots.model.input.perfume.NoviceInput;
 import com.accenture.tgbots.service.CommandHandler;
 

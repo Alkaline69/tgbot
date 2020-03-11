@@ -1,15 +1,16 @@
 package com.accenture.tgbots.model.input.perfume;
 
 import com.accenture.tgbots.model.input.HandlerInput;
-import lombok.Data;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.Calendar;
 import java.util.Date;
 
-@Data
 public class NoviceInput implements HandlerInput {
 
+    /**
+     * Глубина поиска по истории
+     */
     public enum Depth {
         ONE_MONTH {
             @Override
@@ -46,4 +47,11 @@ public class NoviceInput implements HandlerInput {
 
     Depth depth;
 
+    public Depth getDepth() {
+        return depth;
+    }
+
+    public void setDepth(Depth depth) {
+        this.depth = depth;
+    }
 }

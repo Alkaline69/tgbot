@@ -1,14 +1,11 @@
 package com.accenture.tgbots.model.output;
 
-import lombok.Data;
-
 import java.util.Collections;
 import java.util.List;
 
 /**
  * Результат оюработки ботом команды
  */
-@Data
 public class ProcessingResult {
 
     public enum Status {OK, BAD_ARGUMENT, INTERNAL_ERROR}
@@ -41,5 +38,21 @@ public class ProcessingResult {
 
     public String getError() {
         return status.name();
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public List<String> getResults() {
+        return results;
+    }
+
+    public void setResults(List<String> results) {
+        this.results = results;
     }
 }
