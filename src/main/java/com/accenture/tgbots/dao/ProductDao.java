@@ -1,6 +1,7 @@
 package com.accenture.tgbots.dao;
 
 import com.accenture.tgbots.model.Product;
+import com.accenture.tgbots.model.input.perfume.NoviceInput;
 import org.jooq.Record;
 import org.jooq.RecordMapper;
 import org.springframework.util.CollectionUtils;
@@ -50,9 +51,19 @@ public class ProductDao extends AbstractHandlerDao {
     public Product getRandomProduct() {
         try {
             int count = dsl().selectCount().from(TPRODUCT).fetchOne(0, int.class);
-            Random random = new Random(count);
             int randomIndex = (int) (Math.random() * count);
-            return getAllProducts().get(randomIndex);
+            Product product = dsl()
+                    .select()
+                    .from(TPRODUCT)
+                    .join(TBRAND).on(TBRAND.BRANDID.eq(TPRODUCT.BRANDID))
+                    .join(TTYPE).on(TTYPE.TYPEID.eq(TPRODUCT.TYPEID))
+                    .join(TFAMILY).on(TFAMILY.FAMILYID.eq(TPRODUCT.FAMILYID))
+                    .join(TCOUNTRY).on(TCOUNTRY.COUNTRYID.eq(TPRODUCT.COUNTRYID))
+                    .join(TSEX).on(TSEX.SEXID.eq(TPRODUCT.SEXID))
+                    .limit(1)
+                    .offset(randomIndex)
+                    .fetchOne(MAPPER);
+            return product;
         } catch (SQLException e) {
             return null;
         }
@@ -99,6 +110,44 @@ public class ProductDao extends AbstractHandlerDao {
                             .and(TBRAND.NAME.equalIgnoreCase(brand)))
                     .limit(MAX_ROWS)
                     .fetchOne(MAPPER);
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    public List<Product> getByDiscount(Byte from, Byte to) {
+        try {
+            return dsl()
+                    .select()
+                    .from(TPRODUCT)
+                    .join(TBRAND).on(TBRAND.BRANDID.eq(TPRODUCT.BRANDID))
+                    .join(TTYPE).on(TTYPE.TYPEID.eq(TPRODUCT.TYPEID))
+                    .join(TFAMILY).on(TFAMILY.FAMILYID.eq(TPRODUCT.FAMILYID))
+                    .join(TCOUNTRY).on(TCOUNTRY.COUNTRYID.eq(TPRODUCT.COUNTRYID))
+                    .join(TSEX).on(TSEX.SEXID.eq(TPRODUCT.SEXID))
+                    .join(TDISCOUNT).on(TPRODUCT.PRODUCTID.eq(TDISCOUNT.PRODUCTID))
+                    .orderBy(TDISCOUNT.DISCOUNT.desc())
+                    .limit(MAX_ROWS)
+                    .fetch(MAPPER);
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    public List<Product> getByNovelty(NoviceInput noviceInput) {
+        try {
+            return dsl()
+                    .select()
+                    .from(TPRODUCT)
+                    .join(TBRAND).on(TBRAND.BRANDID.eq(TPRODUCT.BRANDID))
+                    .join(TTYPE).on(TTYPE.TYPEID.eq(TPRODUCT.TYPEID))
+                    .join(TFAMILY).on(TFAMILY.FAMILYID.eq(TPRODUCT.FAMILYID))
+                    .join(TCOUNTRY).on(TCOUNTRY.COUNTRYID.eq(TPRODUCT.COUNTRYID))
+                    .join(TSEX).on(TSEX.SEXID.eq(TPRODUCT.SEXID))
+                    .where(TPRODUCT.REALIZEDATE.ge(new java.sql.Date(noviceInput.getDepth().getDateFrom().getTime())))
+                    .orderBy(TPRODUCT.REALIZEDATE.desc())
+                    .limit(MAX_ROWS)
+                    .fetch(MAPPER);
         } catch (SQLException e) {
             return null;
         }

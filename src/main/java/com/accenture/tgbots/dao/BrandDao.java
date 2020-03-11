@@ -8,14 +8,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 import static org.jooq.generated.Tables.TBRAND;
-import static org.jooq.generated.Tables.TFAMILY;
 
 public class BrandDao extends AbstractHandlerDao {
 
     private final static RecordMapper<Record, Brand> MAPPER = record -> {
         Brand brand = new Brand();
-        brand.setId(record.get(TFAMILY.FAMILYID));
-        brand.setName(record.get(TFAMILY.NAME));
+        brand.setId(record.get(TBRAND.BRANDID));
+        brand.setName(record.get(TBRAND.NAME));
         return brand;
     };
 

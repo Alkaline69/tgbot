@@ -1,6 +1,8 @@
 logging:
   level:
-    org.springframework: DEBUG
+    org.springframework: INFO
+    org.jooq: DEBUG
+  file: out/logs/test.log
 
 myemail: test
 

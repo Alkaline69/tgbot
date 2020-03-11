@@ -6,6 +6,14 @@ import com.accenture.tgbots.service.CommandHandler;
 import com.accenture.tgbots.service.HandlerAbout;
 import com.accenture.tgbots.service.HandlerEcho;
 import com.accenture.tgbots.service.perfume.*;
+import com.accenture.tgbots.service.perfume.dict.BrandHandler;
+import com.accenture.tgbots.service.perfume.dict.FamilyHandler;
+import com.accenture.tgbots.service.perfume.dict.NoteHandler;
+import com.accenture.tgbots.service.perfume.dict.TitleHandler;
+import com.accenture.tgbots.service.perfume.novelty.ByHalfYearNoveltyHandlerImpl;
+import com.accenture.tgbots.service.perfume.novelty.ByLastYearNoveltyHandlerImpl;
+import com.accenture.tgbots.service.perfume.novelty.ByMonthNoveltyHandlerImpl;
+import com.accenture.tgbots.service.perfume.novelty.BySeasonNoveltyHandlerImpl;
 import com.annimon.tgbotsmodule.BotHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -99,7 +107,10 @@ public class BotHandlerImpl extends BotHandler {
     private void createHandlers() {
         handlers = List.of(
                 new HandlerEcho(),
+                new NoteHandler(), new BrandHandler(), new TitleHandler(), new FamilyHandler(),
                 new FindByNoteHandler(), new GetNoviceHandler(), new GetRandomHandler(), new SplitToNoteHandler(), new GetProductHandler(), new ByFamilyHandler(),
+                new ByDiscountHandler(),
+                new ByMonthNoveltyHandlerImpl(), new BySeasonNoveltyHandlerImpl(), new ByHalfYearNoveltyHandlerImpl(), new ByLastYearNoveltyHandlerImpl(),
                 new SplitToNoteHandler()
         );
 
